@@ -67,11 +67,6 @@ def image_preprocess(model, img_name, threshold = 0.5):
     source_image = cv2.imread(img_name)
     resized_image = source_image
 
-    # target_width = 256
-    # # inport a image
-    # ratio = target_width / source_image.shape[1]
-    # target_height = int(source_image.shape[0] * ratio)
-    # resized_image = cv2.resize(source_image, (target_width, target_height))
     resized_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2RGB)
     img = np.array(resized_image)
     print('size of the image: {}'.format(img.shape))
@@ -81,8 +76,6 @@ def image_preprocess(model, img_name, threshold = 0.5):
     # Run detection
     detections = model(input_tensor)
 
-    # Explore `detections` to see what you got
-    # print(detections)
 
     # Suppose `detections` is the output from the model
     boxes = detections['detection_boxes'][0].numpy()
@@ -93,12 +86,6 @@ def image_preprocess(model, img_name, threshold = 0.5):
     labels = [category_index.get(c, 'Unknown') for c in classes]
 
     image_with_boxes = draw_boxes(img, boxes, labels, scores, threshold = threshold)
-
-    # # Display the image
-    # plt.figure(figsize=(12, 8))
-    # plt.imshow(image_with_boxes)
-    # plt.axis('off')
-    # plt.show()
 
     target_label = 84  # Label for 'book'
     cropped_images = crop_images(resized_image, boxes, classes, scores, target_label, threshold=threshold)
@@ -122,18 +109,6 @@ def image_preprocess(model, img_name, threshold = 0.5):
         target_height = int(image.shape[0] * ratio)
         image = cv2.resize(image, (target_width, target_height))
         result_images.append(image)
-    # fig, axs = plt.subplots(1, len(cropped_images), figsize=(15, 5))
-    
-    # # If there's only one image, axs won't be an array, so we make it into one for uniformity
-    # if len(cropped_images) == 1:
-    #     axs = [axs]
-
-    # # Display each image
-    # for img, ax in zip(cropped_images, axs):
-    #     ax.imshow(img)
-    #     ax.axis('off')  # Hide axes
-
-    # plt.show()
     
     return result_images
 
@@ -232,36 +207,3 @@ def get_image(img_path):
     # model_dir = '..\\model\\centernet_hg104_512x512_coco17_tpu-8\\saved_model'
     model = import_model(model_dir)
     image_preprocess(model, img_path)
-
-
-if __name__ == '__main__':
-    
-    # model_dir = '..\\model\\efficientdet_d6_coco17_tpu-32\\saved_model'
-    # model_dir = '..\\model\\centernet_hg104_512x512_coco17_tpu-8\\saved_model'
-    model_dir = '..\\model\\centernet_hg104_1024x1024_kpts_coco17_tpu-32\\saved_model'
-    img_path = '..\\data\\10testers\\1book'
-    model = import_model(model_dir)
-    image_name = '\\2.jpg'
-    source_image = img_path + image_name
-    # image_preprocess(model, source_image)
-
-    
-    source_image = cv2.imread(source_image)
-    # resize to 1024x1024
-    resized_image = cv2.resize(source_image, (1024, 1024))
-
-    # target_width = 256
-    # # inport a image
-    # ratio = target_width / source_image.shape[1]
-    # target_height = int(source_image.shape[0] * ratio)
-    # resized_image = cv2.resize(source_image, (target_width, target_height))
-    resized_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2RGB)
-    img = np.array(resized_image)
-    print('size of the image: {}'.format(img.shape))
-
-    input_tensor = tf.convert_to_tensor(img)
-    input_tensor = input_tensor[tf.newaxis, ...]
-    # Run detection
-    detections = model(input_tensor)
-
-    draw_keypoints(detections, resized_image)

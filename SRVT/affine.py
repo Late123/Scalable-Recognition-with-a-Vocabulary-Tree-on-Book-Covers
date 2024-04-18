@@ -74,9 +74,3 @@ if __name__ == '__main__':
         ax.set_title(f'Tilt factor: {i}')
     plt.show()
 
-
-    # for i in range(1, 6):
-    #     tilted_image = apply_tilt(image, i)
-    #     plt.imshow(tilted_image, cmap='gray')
-    #     plt.title(f'Tilt factor: {i}')
-    #     plt.show()

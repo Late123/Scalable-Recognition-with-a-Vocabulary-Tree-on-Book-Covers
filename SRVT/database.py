@@ -27,7 +27,6 @@ class Node:
 class Database:
     def __init__(self):
         self.data_path = ''
-        # self.img_to_des_and_kpts = {}
         self.num_imgs = 0
         self.word_to_img = {}
         self.BoW = {}
@@ -189,18 +188,6 @@ class Database:
             if num_imgs % 100 == 0:
                 print('Building BoW: {} out of {}'.format(num_imgs, len(self.all_image)))
                 print('Estimated time left: {}'.format((time.time() - start_time) * (len(self.all_image) - num_imgs) / num_imgs))
-
-        # for j in range(len(self.all_image)):
-        #     img = self.all_image[j]
-        #     t = np.zeros(self.word_idx_count)
-        #     t =self.img_to_histgram[img] 
-        #     for w in range(self.word_idx_count):
-        #         n_wj = self.img_to_histgram[img][w]
-        #         n_j = np.sum(self.img_to_histgram[img])
-        #         n_w = self.word_count[w]
-        #         N = self.num_imgs
-        #         t[w] = (n_wj/n_j) * np.log(N/n_w)
-            # self.BoW[img] = t
 
 
     def spatial_verification(self, query, img_path_lst, method):
@@ -537,32 +524,13 @@ if __name__ == '__main__':
     db = Database()
     build_database(cover_path, k=5, L=7, method='SIFT', save_path='..\\model\\data_sift')
 
-    # If we have already build and save the database, we can just load database directly
-    print('Loading the database')
-    db.load('..\\model\\data_sift')
-    print(f"Memory usage of attribute '{db}': {asizeof.asizeof(db)} bytes")
-    for attribute_name, attribute_value in vars(db).items():
-        size = asizeof.asizeof(attribute_value)
-        print(f"Memory usage of attribute '{attribute_name}': {size} bytes")
+    # Test Load
+    # print('Loading the database')
+    # db.load('..\\model\\data_sift')
 
     # query a folder
     # query_list(db, test_path, top_K = 10, method='SIFT')
 
     # query a image
-    test = test_path + '/image_04.jpg'
-    test = cv2.imread(test)
-
-    # maxpooling the image
-    test = cv2.resize(test, (0,0), fx=0.5, fy=0.5)
-    print('size of the test image: {}'.format(test.shape))
-    print('Querying the image')
-    best_img, best_img_path, best_H, best_K= db.query(test, top_K = 10, method='SIFT')
-
-    # plot both the test image and the best match image
-    plt.subplot(1, 2, 1)
-    plt.imshow(cv2.cvtColor(test, cv2.COLOR_BGR2RGB))
-    plt.title('Query Image')
-    plt.subplot(1, 2, 2)
-    plt.imshow(cv2.cvtColor(best_img, cv2.COLOR_BGR2RGB))
-    plt.title('Best Match Image')
-    plt.show()
+    # test = test_path + '/image_04.jpg'
+    # test = cv2.imread(test)
